@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+    <div class="win">
+        <h1>Winner</h1>
+        <div class="msg">
+
+        </div>
+    </div>
+
+    <div class="popup">
+        <h4 class="turn">Player 1 (X) Turn</h4>
+    </div>
+
+    <div class="container">
+        <h1>Tic Tac Toe</h1>
+
+        <div class="names">
+            <h2>Enter Players Name</h2>
+            <input type="text" placeholder="Player 1 Name" class="namebox" id="player1" name="player1" required> <br>
+            <input type="text" placeholder="Player 2 Name" class="namebox" id="player2" name="player2"> <br>
+            <button id="start-btn">Start Game</button>
+        </div>
+
+        <div id="box-btn" style="display: none;">
+            <button id="box" class="box1"></button>
+            <button id="box" class="box2"></button>
+            <button id="box" class="box3"></button>
+            <button id="box" class="box4"></button>
+            <button id="box" class="box5"></button>
+            <button id="box" class="box6"></button>
+            <button id="box" class="box7"></button>
+            <button id="box" class="box8"></button>
+            <button id="box" class="box9"></button>
+        </div>
+        <button id="restart-btn" style="display: none;">Restart Game</button>
+    </div>
+
+    <div class="playersName">
+        <h3>Players</h3>
+        <p id="p1"> Player 1 : </p>
+        <p id="p2"> Player 2 : </p>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

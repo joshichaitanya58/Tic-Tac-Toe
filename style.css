@@ -126,3 +126,12 @@ h1 {
 .turn {
     color: green;
 }
+
+.xox {
+    width: 100em;
+    height: 100em;
+    position: absolute;
+    top: 0;
+    opacity: 0.2;
+
+}

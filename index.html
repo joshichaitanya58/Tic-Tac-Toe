@@ -9,48 +9,76 @@
 </head>
 
 <body>
+    <!-- Subtle Background Pattern -->
+    <div class="bg-overlay"></div>
 
+    <main class="container">
+        <header class="header">
+            <h1>Tic Tac Toe</h1>
+        </header>
 
-    <div class="win">
-        <h1>Winner</h1>
-        <div class="msg">
+        <!-- Player Setup Card -->
+        <div class="card names" id="setup-card">
+            <h2>Enter Player Names</h2>
 
+            <div class="input-group">
+                <label for="player1">Player 1 (X)</label>
+                <input type="text" placeholder="Enter Player 1 Name" class="namebox" id="player1" name="player1" maxlength="15">
+            </div>
+
+            <div class="input-group">
+                <label for="player2">Player 2 (O)</label>
+                <input type="text" placeholder="Enter Player 2 Name" class="namebox" id="player2" name="player2" maxlength="15">
+            </div>
+
+            <button id="start-btn" class="btn primary-btn">Start Game</button>
         </div>
-    </div>
 
-    <div class="popup">
-        <h4 class="turn">Player 1 (X) Turn</h4>
-    </div>
+        <!-- Active Game Area -->
+        <div id="game-area" class="game-area" style="display: none;">
+            <!-- Scoreboard / Player Pills -->
+            <div class="scoreboard">
+                <div class="score-pill p1-pill active-turn" id="p1-card">
+                    <span class="player-symbol x-text">X</span>
+                    <span class="player-label" id="p1">Player 1</span>
+                    <strong class="score-count" id="score-x">0</strong>
+                </div>
+                <div class="score-pill draw-pill">
+                    <span class="player-label">Draws</span>
+                    <strong class="score-count" id="score-draw">0</strong>
+                </div>
+                <div class="score-pill p2-pill" id="p2-card">
+                    <span class="player-symbol o-text">O</span>
+                    <span class="player-label" id="p2">Player 2</span>
+                    <strong class="score-count" id="score-o">0</strong>
+                </div>
+            </div>
 
-    <div class="container">
-        <h1>Tic Tac Toe</h1>
+            <!-- Turn / Winner Status Banner -->
+            <div class="popup" id="status-popup">
+                <h4 class="turn" id="turn-text">Player 1 (X)'s Turn</h4>
+            </div>
 
-        <div class="names">
-            <h2>Enter Players Name</h2>
-            <input type="text" placeholder="Player 1 Name" class="namebox" id="player1" name="player1" required> <br>
-            <input type="text" placeholder="Player 2 Name" class="namebox" id="player2" name="player2"> <br>
-            <button id="start-btn">Start Game</button>
+            <!-- 3x3 Board -->
+            <div id="box-btn" class="board" data-turn="X">
+                <button class="cell box1" aria-label="Cell 1"></button>
+                <button class="cell box2" aria-label="Cell 2"></button>
+                <button class="cell box3" aria-label="Cell 3"></button>
+                <button class="cell box4" aria-label="Cell 4"></button>
+                <button class="cell box5" aria-label="Cell 5"></button>
+                <button class="cell box6" aria-label="Cell 6"></button>
+                <button class="cell box7" aria-label="Cell 7"></button>
+                <button class="cell box8" aria-label="Cell 8"></button>
+                <button class="cell box9" aria-label="Cell 9"></button>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="action-buttons">
+                <button id="restart-btn" class="btn primary-btn">Play Again</button>
+                <button id="change-names-btn" class="btn secondary-btn">Change Players</button>
+            </div>
         </div>
-
-        <div id="box-btn" style="display: none;">
-            <button id="box" class="box1"></button>
-            <button id="box" class="box2"></button>
-            <button id="box" class="box3"></button>
-            <button id="box" class="box4"></button>
-            <button id="box" class="box5"></button>
-            <button id="box" class="box6"></button>
-            <button id="box" class="box7"></button>
-            <button id="box" class="box8"></button>
-            <button id="box" class="box9"></button>
-        </div>
-        <button id="restart-btn" style="display: none;">Restart Game</button>
-    </div>
-
-    <div class="playersName">
-        <h3>Players</h3>
-        <p id="p1"> Player 1 : </p>
-        <p id="p2"> Player 2 : </p>
-    </div>
+    </main>
 
     <script src="main.js"></script>
 </body>

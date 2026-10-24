@@ -1,121 +1,153 @@
-let box1 = document.querySelector('.box1');
-let box2 = document.querySelector('.box2');
-let box3 = document.querySelector('.box3');
-let box4 = document.querySelector('.box4');
-let box5 = document.querySelector('.box5');
-let box6 = document.querySelector('.box6');
-let box7 = document.querySelector('.box7');
-let box8 = document.querySelector('.box8');
-let box9 = document.querySelector('.box9');
+const boxes = Array.from(document.querySelectorAll('.cell'));
+const board = document.getElementById('box-btn');
+const setupCard = document.getElementById('setup-card');
+const gameArea = document.getElementById('game-area');
 
-let player1 = document.getElementById('player1');
-let player2 = document.getElementById('player2');
+const player1Input = document.getElementById('player1');
+const player2Input = document.getElementById('player2');
+const p1Label = document.getElementById('p1');
+const p2Label = document.getElementById('p2');
+const p1Card = document.getElementById('p1-card');
+const p2Card = document.getElementById('p2-card');
 
-let plyerNames = document.querySelector('.playersName');
+const scoreXEl = document.getElementById('score-x');
+const scoreOEl = document.getElementById('score-o');
+const scoreDrawEl = document.getElementById('score-draw');
 
-const popup = document.querySelector('.popup');
+const popup = document.getElementById('status-popup');
+const turnText = document.getElementById('turn-text');
+const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
-
+const changeNamesBtn = document.getElementById('change-names-btn');
 
 let turn = 'X';
 let gameActive = false;
+let scores = { X: 0, O: 0, draw: 0 };
 
-function gamelogic() {
-    const boxes = [box1, box2, box3, box4, box5, box6, box7, box8, box9];
+const winCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
 
-    boxes.forEach(box => {
-        box.addEventListener('click', function () {
-            if (!gameActive || box.innerText !== '') return;
+function getPlayerName(symbol) {
+    if (symbol === 'X') {
+        return player1Input.value.trim() || 'Player 1';
+    }
+    return player2Input.value.trim() || 'Player 2';
+}
 
-            if (turn === 'X') {
-                box.innerText = 'X';
-            } else {
-                box.innerText = 'O';
-            }
+function updateTurnUI() {
+    board.setAttribute('data-turn', turn);
+    turnText.innerText = `${getPlayerName(turn)} (${turn})'s Turn`;
 
-            let winner = checkWin();
-            if (winner) {
-                gameActive = false;
-                let winnerName = winner === 'X' ? (player1.value || 'Player 1') : (player2.value || 'Player 2');
-                popup.innerHTML = `<h4 class="turn">🎉 ${winnerName} (${winner}) Wins! 🎉</h4>`;
-                restartBtn.style.display = 'block';
-                return;
-            }
-
-            let isDraw = boxes.every(b => b.innerText !== '');
-            if (isDraw) {
-                gameActive = false;
-                popup.innerHTML = `<h4 class="turn">🤝 It's a Draw! 🤝</h4>`;
-                restartBtn.style.display = 'block';
-                return;
-            }
-
-            turn = turn === 'X' ? 'O' : 'X';
-            let nextPlayer = turn === 'X' ? (player1.value || 'Player 1') : (player2.value || 'Player 2');
-            popup.innerHTML = `<h4 class="turn">${nextPlayer} (${turn}) Turn</h4>`;
-        });
-    });
-};
+    if (turn === 'X') {
+        p1Card.classList.add('active-turn');
+        p2Card.classList.remove('active-turn');
+    } else {
+        p2Card.classList.add('active-turn');
+        p1Card.classList.remove('active-turn');
+    }
+}
 
 function checkWin() {
-    const winCombination = [
-        [box1, box2, box3],
-        [box4, box5, box6],
-        [box7, box8, box9],
-        [box1, box4, box7],
-        [box2, box5, box8],
-        [box3, box6, box9],
-        [box1, box5, box9],
-        [box3, box5, box7]
-    ];
-
-    for (const combination of winCombination) {
-        const [a, b, c] = combination;
-        if (a.innerText === b.innerText && b.innerText === c.innerText && a.innerText !== '') {
-            return a.innerText;
+    for (const combo of winCombinations) {
+        const [a, b, c] = combo;
+        if (
+            boxes[a].innerText !== '' &&
+            boxes[a].innerText === boxes[b].innerText &&
+            boxes[b].innerText === boxes[c].innerText
+        ) {
+            return { symbol: boxes[a].innerText, combo };
         }
     }
     return null;
 }
 
-gamelogic();
+function initGameLogic() {
+    boxes.forEach(box => {
+        box.addEventListener('click', function () {
+            if (!gameActive || box.innerText !== '') return;
 
+            box.innerText = turn;
+            box.classList.add('taken', turn === 'X' ? 'x-mark' : 'o-mark');
 
-let submitBtn = document.getElementById('start-btn');
-submitBtn.addEventListener('click', function (event) {
-    event.preventDefault(); 
+            const winResult = checkWin();
+            if (winResult) {
+                gameActive = false;
+                board.classList.add('locked');
 
-    document.getElementById('box-btn').style.display = 'grid';
-    document.querySelector('.container').style.marginTop = '5vh'; 
-    document.querySelector('.names').style.display = 'none';
-    plyerNames.style.display = 'none'; 
+                winResult.combo.forEach(index => {
+                    boxes[index].classList.add('winner-cell');
+                });
 
-    popup.style.display = 'flex';
-    
+                scores[winResult.symbol]++;
+                scoreXEl.innerText = scores.X;
+                scoreOEl.innerText = scores.O;
 
-    if (player1.value == '') {
-        player1.value = 'Player 1';
-    }
+                const winnerName = getPlayerName(winResult.symbol);
+                popup.classList.add('win-banner');
+                turnText.innerText = `🎉 ${winnerName} (${winResult.symbol}) Wins!`;
+                return;
+            }
 
-    if (player2.value == '') {
-        player2.value = 'Player 2';
-    }
+            const isDraw = boxes.every(b => b.innerText !== '');
+            if (isDraw) {
+                gameActive = false;
+                board.classList.add('locked');
+                scores.draw++;
+                scoreDrawEl.innerText = scores.draw;
 
-    const p1 = document.getElementById('p1');
-    const p2 = document.getElementById('p2');
-    p1.innerText = `Player 1: ${player1.value} (X)`;
-    p2.innerText = `Player 2: ${player2.value} (O)`;
+                popup.classList.add('draw-banner');
+                turnText.innerText = `🤝 It's a Draw!`;
+                return;
+            }
 
-    
-    popup.innerHTML = `<h4 class="turn">${player1.value} (X) Turn</h4>`;
+            turn = turn === 'X' ? 'O' : 'X';
+            updateTurnUI();
+        });
+    });
+}
+
+function resetBoard() {
+    boxes.forEach(box => {
+        box.innerText = '';
+        box.classList.remove('taken', 'x-mark', 'o-mark', 'winner-cell');
+    });
+    turn = 'X';
     gameActive = true;
+    board.classList.remove('locked');
+    popup.classList.remove('win-banner', 'draw-banner');
+    updateTurnUI();
+}
+
+startBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    p1Label.innerText = getPlayerName('X');
+    p2Label.innerText = getPlayerName('O');
+
+    setupCard.style.display = 'none';
+    gameArea.style.display = 'flex';
+
+    resetBoard();
 });
 
-restartBtn.addEventListener('click', function () {
-    const boxes = [box1, box2, box3, box4, box5, box6, box7, box8, box9];
-    boxes.forEach(box => box.innerText = ''); 
-    turn = 'X'; 
-    gameActive = true; 
-    popup.innerHTML = `<h4 class="turn">${player1.value || 'Player 1'} (X) Turn</h4>`;
-    restartBtn.style.display = 'none'; 
+restartBtn.addEventListener('click', resetBoard);
+
+changeNamesBtn.addEventListener('click', function () {
+    scores = { X: 0, O: 0, draw: 0 };
+    scoreXEl.innerText = '0';
+    scoreOEl.innerText = '0';
+    scoreDrawEl.innerText = '0';
+
+    gameArea.style.display = 'none';
+    setupCard.style.display = 'block';
 });
+
+initGameLogic();
